@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="50sp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_add_word"
+        android:id="@+id/tv_word_list"
+        android:textSize="@dimen/list_word_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_add_word"
+        android:id="@+id/tv_desc_list"
+        android:layout_marginStart="@dimen/list_word_size"
+        android:textSize="@dimen/list_word_size"/>
+
+</LinearLayout>

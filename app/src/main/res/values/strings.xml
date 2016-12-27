@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WordBook</string>
+    <string name="btn_add_word">add a word</string>
 </resources>
