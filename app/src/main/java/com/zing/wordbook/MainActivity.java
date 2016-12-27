@@ -1,14 +1,19 @@
 package com.zing.wordbook;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.zing.wordbook.dao.WordsOpenHelper;
 import com.zing.wordbook.domain.Words;
 
 import java.util.ArrayList;
@@ -16,24 +21,41 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button btn_add_word = null;
     private ListView lv_words = null;
     private List<Words> words = null;
     private WordAdapter adapter = null;
+    WordsOpenHelper wordsOpenHelper = new WordsOpenHelper(MainActivity.this,null,null);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        btn_add_word.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,AddWordActivity.class));
+            }
+        });
         words = new ArrayList<>();
-        for (int i = 0; i < 50; i++){
-            words.add(i, new Words("int" +i ,"INT"+ i + i));
+
+        SQLiteDatabase readableDatabase = wordsOpenHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM words",null);
+        int i = 0;
+        while(cursor.moveToNext()){
+            String name = cursor.getString(cursor.getColumnIndex("wordsname"));
+            String desc = cursor.getString(cursor.getColumnIndex("wordsdesc"));
+            words.add(i++, new Words(name ,desc));
         }
+        cursor.close();
         adapter = new WordAdapter();
         lv_words.setAdapter(adapter);
     }
 
     private void init() {
         lv_words = (ListView) findViewById(R.id.lv_words);
+        btn_add_word = (Button) findViewById(R.id.btn_add_word);
     }
     class  WordAdapter extends BaseAdapter {
 
