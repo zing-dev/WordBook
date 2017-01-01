@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zing.wordbook.dao.WordsOpenHelper;
 import com.zing.wordbook.domain.Words;
@@ -51,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
         adapter = new WordAdapter();
         lv_words.setAdapter(adapter);
+        lv_words.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView tv_word_list = (TextView) view.findViewById(R.id.tv_word_list);
+                TextView tv_desc_list = (TextView) view.findViewById(R.id.tv_desc_list);
+//                Toast.makeText(MainActivity.this,"i:"+i+" l:"+l+tv_word_list.getText(),Toast.LENGTH_LONG).show();
+                String word = tv_word_list.getText().toString();
+                SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
+                writableDatabase.delete("words","wordsname=?",new String[]{word});
+                Toast.makeText(MainActivity.this,"单词"+word+"删除",Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
     }
 
     private void init() {
