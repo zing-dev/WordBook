@@ -17,7 +17,11 @@ public class WordsOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE words(wordsid INTEGER PRIMARY KEY AUTOINCREMENT,wordsname VARCHAR(30),wordsdesc VARCHAR(100))");
+        sqLiteDatabase.execSQL("CREATE TABLE words(" +
+                "wordsid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "wordsname VARCHAR(30)," +
+                "wordsdesc VARCHAR(100)" +
+                ")");
     }
 
     @Override

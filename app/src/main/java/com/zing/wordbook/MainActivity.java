@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.zing.wordbook.dao.WordsOpenHelper;
 import com.zing.wordbook.domain.Words;
+import com.zing.wordbook.service.WordsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,63 +32,59 @@ public class MainActivity extends AppCompatActivity {
     private WordAdapter adapter = null;
     WordsOpenHelper wordsOpenHelper = new WordsOpenHelper(MainActivity.this,null,null);
 
-    private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
+    private AlertDialog alert = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        getAllWords();
         btn_add_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this,AddWordActivity.class));
             }
         });
-        words = new ArrayList<>();
 
-        SQLiteDatabase readableDatabase = wordsOpenHelper.getReadableDatabase();
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM words",null);
-        int i = 0;
-        while(cursor.moveToNext()){
-            String name = cursor.getString(cursor.getColumnIndex("wordsname"));
-            String desc = cursor.getString(cursor.getColumnIndex("wordsdesc"));
-            words.add(i++, new Words(name ,desc));
-        }
-        cursor.close();
-        adapter = new WordAdapter();
-        lv_words.setAdapter(adapter);
         lv_words.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView tv_word_list = (TextView) view.findViewById(R.id.tv_word_list);
                 TextView tv_desc_list = (TextView) view.findViewById(R.id.tv_desc_list);
-//                Toast.makeText(MainActivity.this,"i:"+i+" l:"+l+tv_word_list.getText(),Toast.LENGTH_LONG).show();
                 final String word = tv_word_list.getText().toString();
                 builder = new AlertDialog.Builder(MainActivity.this);
-                Toast.makeText(MainActivity.this, word, Toast.LENGTH_SHORT).show();
                 alert = builder
                         .setTitle("系统提示")
                         .setMessage("确定删除单词: "+word+"?")
-                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Toast.makeText(MainActivity.this, "你点击了取消按钮~", Toast.LENGTH_SHORT).show();
                             }
                         }).
-                        setPositiveButton("submit", new DialogInterface.OnClickListener() {
+                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
                                 writableDatabase.delete("words","wordsname=?",new String[]{word});
                                 Toast.makeText(MainActivity.this,"单词"+word+"删除",Toast.LENGTH_LONG).show();
+                                getAllWords();
                             }
                         })
                         .show();
+                alert.create();
                 return true;
             }
         });
+    }
+
+    private void getAllWords() {
+        WordsService wordsService = new WordsService(this);
+        words = wordsService.getAllWords();
+        adapter = new WordAdapter();
+        lv_words.setAdapter(adapter);
     }
 
     private void init() {
@@ -108,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
+            return position;
         }
 
         //返回带数据当前行的Item视图对象
@@ -132,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
             //返回convertView
             return convertView;
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("TAG", "onResume() load layout");
+        getAllWords();
     }
 }
