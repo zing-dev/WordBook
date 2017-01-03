@@ -1,5 +1,7 @@
 package com.zing.wordbook;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Words> words = null;
     private WordAdapter adapter = null;
     WordsOpenHelper wordsOpenHelper = new WordsOpenHelper(MainActivity.this,null,null);
+
+    private AlertDialog alert = null;
+    private AlertDialog.Builder builder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +64,27 @@ public class MainActivity extends AppCompatActivity {
                 TextView tv_word_list = (TextView) view.findViewById(R.id.tv_word_list);
                 TextView tv_desc_list = (TextView) view.findViewById(R.id.tv_desc_list);
 //                Toast.makeText(MainActivity.this,"i:"+i+" l:"+l+tv_word_list.getText(),Toast.LENGTH_LONG).show();
-                String word = tv_word_list.getText().toString();
-                SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
-                writableDatabase.delete("words","wordsname=?",new String[]{word});
-                Toast.makeText(MainActivity.this,"单词"+word+"删除",Toast.LENGTH_LONG).show();
+                final String word = tv_word_list.getText().toString();
+                builder = new AlertDialog.Builder(MainActivity.this);
+                Toast.makeText(MainActivity.this, word, Toast.LENGTH_SHORT).show();
+                alert = builder
+                        .setTitle("系统提示")
+                        .setMessage("确定删除单词: "+word+"?")
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(MainActivity.this, "你点击了取消按钮~", Toast.LENGTH_SHORT).show();
+                            }
+                        }).
+                        setPositiveButton("submit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
+                                writableDatabase.delete("words","wordsname=?",new String[]{word});
+                                Toast.makeText(MainActivity.this,"单词"+word+"删除",Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .show();
                 return true;
             }
         });
