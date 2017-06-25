@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private TextView tv_count_word = null;
     private Button btn_add_word = null;
     private ListView lv_word = null;
     private List<Word> word = null;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder builder = null;
     private AlertDialog alert = null;
 
-    WordService wordService = null;
+    WordService wordService = new WordService(this);
 
 
     @Override
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                         }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                wordService = new WordService(MainActivity.this);
                                 wordService.deleteWord(mWord);
                                 Toast.makeText(MainActivity.this, "单词" + mWord.getWordName() + "删除", Toast.LENGTH_LONG).show();
                                 getAllWords();
@@ -78,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getAllWords() {
-        wordService = new WordService(this);
         word = wordService.getAllWords();
+//        int count = wordService.count();
+//        tv_count_word.setText("总共 " + count + "个单词");
+        tv_count_word.setText("总共 " + word.size() + "个单词");
         WordAdapter adapter = new WordAdapter();
         lv_word.setAdapter(adapter);
     }
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         lv_word = (ListView) findViewById(R.id.lv_words);
         btn_add_word = (Button) findViewById(R.id.btn_add_word);
+        tv_count_word = (TextView) findViewById(R.id.word_count);
     }
 
     private class WordAdapter extends BaseAdapter {
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             TextView tv_word_list = (TextView) convertView.findViewById(R.id.tv_word_list);
             TextView tv_desc_list = (TextView) convertView.findViewById(R.id.tv_desc_list);
             //4. 给视图设置数据
-            tv_word_list.setText(mWord.getWordId() + " - " + mWord.getWordName());
+            tv_word_list.setText((position + 1) + " - " + mWord.getWordName());
             tv_desc_list.setText(mWord.getWordDesc());
             //返回convertView
             return convertView;

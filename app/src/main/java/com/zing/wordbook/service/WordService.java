@@ -36,7 +36,6 @@ public class WordService {
         cursor.close();
         readableDatabase.close();
         wordOpenHelper.close();
-        wordOpenHelper = null;
         return word;
     }
 
@@ -45,11 +44,23 @@ public class WordService {
         writableDatabase.execSQL("INSERT INTO word(word_name,word_desc) values(?,?)", new String[]{word.getWordName(), word.getWordDesc()});
         writableDatabase.close();
         wordOpenHelper.close();
-        wordOpenHelper = null;
     }
 
     public void deleteWord(Word word) {
         SQLiteDatabase writableDatabase = wordOpenHelper.getWritableDatabase();
-        writableDatabase.delete("word", "word_name=?", new String[]{word.getWordName()});
+//        writableDatabase.delete("word", "word_name=?", new String[]{word.getWordName()});
+        writableDatabase.delete("word", "word_id=?", new String[]{String.valueOf(word.getWordId())});
+        writableDatabase.close();
+        wordOpenHelper.close();
+    }
+
+    public int count(){
+        SQLiteDatabase readableDatabase = wordOpenHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery("SELECT COUNT(*) FROM word", null);
+        int count = cursor.getCount();
+        cursor.close();
+        readableDatabase.close();
+        wordOpenHelper.close();
+        return count;
     }
 }
