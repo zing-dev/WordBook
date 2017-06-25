@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WordBook</string>
+    <string name="app_name">GitBook</string>
     <string name="btn_add_word">add a word</string>
     <string name="btn_add_desc">add a word\'s desc</string>
     <string name="btn_add_submit">submit</string>
