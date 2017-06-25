@@ -13,22 +13,26 @@ import java.util.List;
 
 /**
  * Created by zhang on 2017/1/3.
+ *
  */
 
 public class WordsService {
     private WordsOpenHelper wordsOpenHelper = null;
-    public WordsService(Context context){
-        wordsOpenHelper = new WordsOpenHelper(context,null,null);
+
+    public WordsService(Context context) {
+        wordsOpenHelper = new WordsOpenHelper(context, null, null);
     }
-    public List<Words> getAllWords(){
-        List<Words> words = new ArrayList<>();;
+
+    public List<Words> getAllWords() {
+        List<Words> words = new ArrayList<>();
+        ;
         SQLiteDatabase readableDatabase = wordsOpenHelper.getReadableDatabase();
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM words",null);
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM words", null);
         int i = 0;
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex("wordsname"));
             String desc = cursor.getString(cursor.getColumnIndex("wordsdesc"));
-            words.add(i++, new Words(name ,desc));
+            words.add(i++, new Words(name, desc));
         }
         cursor.close();
         readableDatabase.close();
@@ -36,9 +40,10 @@ public class WordsService {
         wordsOpenHelper = null;
         return words;
     }
-    public void addWord(Words word){
+
+    public void addWord(Words word) {
         SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
-        writableDatabase.execSQL("INSERT INTO words(wordsname,wordsdesc) values(?,?)", new String[]{word.getWordName(),word.getWordDesc()});
+        writableDatabase.execSQL("INSERT INTO words(wordsname,wordsdesc) values(?,?)", new String[]{word.getWordName(), word.getWordDesc()});
         writableDatabase.close();
         wordsOpenHelper.close();
         wordsOpenHelper = null;

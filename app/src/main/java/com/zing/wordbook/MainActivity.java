@@ -3,7 +3,6 @@ package com.zing.wordbook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,16 +20,17 @@ import com.zing.wordbook.dao.WordsOpenHelper;
 import com.zing.wordbook.domain.Words;
 import com.zing.wordbook.service.WordsService;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_add_word = null;
     private ListView lv_words = null;
     private List<Words> words = null;
-    private WordAdapter adapter = null;
-    WordsOpenHelper wordsOpenHelper = new WordsOpenHelper(MainActivity.this,null,null);
+    WordsOpenHelper wordsOpenHelper = new WordsOpenHelper(MainActivity.this, null, null);
 
     private AlertDialog.Builder builder = null;
     private AlertDialog alert = null;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btn_add_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,AddWordActivity.class));
+                startActivity(new Intent(MainActivity.this, AddWordActivity.class));
             }
         });
 
@@ -52,27 +52,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView tv_word_list = (TextView) view.findViewById(R.id.tv_word_list);
-                TextView tv_desc_list = (TextView) view.findViewById(R.id.tv_desc_list);
+//                TextView tv_desc_list = (TextView) view.findViewById(R.id.tv_desc_list);
                 final String word = tv_word_list.getText().toString();
                 builder = new AlertDialog.Builder(MainActivity.this);
                 alert = builder
                         .setTitle("系统提示")
-                        .setMessage("确定删除单词: "+word+"?")
+                        .setMessage("确定删除单词: " + word + "?")
                         .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Toast.makeText(MainActivity.this, "你点击了取消按钮~", Toast.LENGTH_SHORT).show();
                             }
                         }).
-                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
-                                writableDatabase.delete("words","wordsname=?",new String[]{word});
-                                Toast.makeText(MainActivity.this,"单词"+word+"删除",Toast.LENGTH_LONG).show();
-                                getAllWords();
-                            }
-                        })
+                                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        SQLiteDatabase writableDatabase = wordsOpenHelper.getWritableDatabase();
+                                        writableDatabase.delete("words", "wordsname=?", new String[]{word});
+                                        Toast.makeText(MainActivity.this, "单词" + word + "删除", Toast.LENGTH_LONG).show();
+                                        getAllWords();
+                                    }
+                                })
                         .show();
                 alert.create();
                 return true;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private void getAllWords() {
         WordsService wordsService = new WordsService(this);
         words = wordsService.getAllWords();
-        adapter = new WordAdapter();
+        WordAdapter adapter = new WordAdapter();
         lv_words.setAdapter(adapter);
     }
 
@@ -91,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         lv_words = (ListView) findViewById(R.id.lv_words);
         btn_add_word = (Button) findViewById(R.id.btn_add_word);
     }
-    class  WordAdapter extends BaseAdapter {
+
+    private class WordAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             //1. 如果convertView是null, 加载item的布局文件
-            if(convertView==null) {
+            if (convertView == null) {
                 Log.e("TAG", "getView() load layout");
                 convertView = View.inflate(MainActivity.this, R.layout.words_list, null);
             }
