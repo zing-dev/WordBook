@@ -48,7 +48,6 @@ public class WordService {
 
     public void deleteWord(Word word) {
         SQLiteDatabase writableDatabase = wordOpenHelper.getWritableDatabase();
-//        writableDatabase.delete("word", "word_name=?", new String[]{word.getWordName()});
         writableDatabase.delete("word", "word_id=?", new String[]{String.valueOf(word.getWordId())});
         writableDatabase.close();
         wordOpenHelper.close();
