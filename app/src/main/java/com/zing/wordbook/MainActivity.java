@@ -3,6 +3,7 @@ package com.zing.wordbook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,17 +41,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        int flag = intent.getFlags();
+        if (flag != 1) {
+            startActivity(new Intent(this, SplashActivity.class));
+            finish();
+            return;
+        }
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                enterHomeActivity();
+//            }
+//        }, 2000);
+
         setContentView(R.layout.activity_main);
         init();
         getAllWords();
-        btn_add_word.setOnClickListener(new View.OnClickListener() {
+        btn_add_word.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AddWordActivity.class));
             }
         });
 
-        lv_word.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        lv_word.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+
+        {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Word mWord = word.get(i);
@@ -81,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void getAllWords() {
         word = wordService.getAllWords();
         tv_count_word.setText("总共 " + word.size() + "个单词");
-        WordAdapter adapter = new WordAdapter(this,word);
+        WordAdapter adapter = new WordAdapter(this, word);
         lv_word.setAdapter(adapter);
     }
 
@@ -97,4 +116,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i("TAG", "onResume() load layout");
         getAllWords();
     }
+
+    private void enterHomeActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }
