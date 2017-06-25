@@ -4,16 +4,28 @@ package com.zing.wordbook.domain;
  * Created by zhang on 2016/12/27.
  */
 
-public class Words {
+public class Word {
+
+    private int wordId;
     private String wordName;
     private String wordDesc;
 
-    public Words() {
+    public Word() {
     }
 
-    public Words(String wordName, String wordDesc) {
+    public Word(String wordName, String wordDesc) {
         this.wordName = wordName;
         this.wordDesc = wordDesc;
+    }
+
+    public Word(int wordId, String wordName, String wordDesc) {
+        this.wordId = wordId;
+        this.wordName = wordName;
+        this.wordDesc = wordDesc;
+    }
+
+    public int getWordId() {
+        return wordId;
     }
 
     public String getWordName() {
@@ -34,8 +46,9 @@ public class Words {
 
     @Override
     public String toString() {
-        return "Words{" +
-                "wordName='" + wordName + '\'' +
+        return "Word{" +
+                "wordId=" + wordId +
+                ", wordName='" + wordName + '\'' +
                 ", wordDesc='" + wordDesc + '\'' +
                 '}';
     }

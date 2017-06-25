@@ -7,8 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.zing.wordbook.domain.Words;
-import com.zing.wordbook.service.WordsService;
+import com.zing.wordbook.domain.Word;
+import com.zing.wordbook.service.WordService;
 
 public class AddWordActivity extends AppCompatActivity {
 
@@ -30,8 +30,8 @@ public class AddWordActivity extends AppCompatActivity {
                 if ("".equals(word) || "".equals(desc)) {
                     Toast.makeText(AddWordActivity.this, "请输入完整的单词信息", Toast.LENGTH_LONG).show();
                 } else {
-                    WordsService wordsService = new WordsService(AddWordActivity.this);
-                    wordsService.addWord(new Words(word, desc));
+                    WordService wordsService = new WordService(AddWordActivity.this);
+                    wordsService.addWord(new Word(word, desc));
                     Toast.makeText(AddWordActivity.this, "添加成功", Toast.LENGTH_LONG).show();
                 }
             }
