@@ -78,4 +78,24 @@ public class WordService {
         wordOpenHelper.close();
         return word;
     }
+
+    public boolean wordExist(String s) {
+        return findWord(s) != null;
+    }
+
+    public Word findWord(String word_name) {
+        Word word = null;
+        SQLiteDatabase readableDatabase = wordOpenHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM word WHERE word_name = '" + word_name + "'", null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("word_id"));
+            String name = cursor.getString(cursor.getColumnIndex("word_name"));
+            String desc = cursor.getString(cursor.getColumnIndex("word_desc"));
+            word = new Word(id, name, desc);
+        }
+        cursor.close();
+        readableDatabase.close();
+        wordOpenHelper.close();
+        return word;
+    }
 }

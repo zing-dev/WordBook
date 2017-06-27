@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 word = wordService.searchByWord(String.valueOf(s));
                 WordAdapter adapter = new WordAdapter(MainActivity.this, word);
+                tv_count_word.setText("搜索到 " + word.size() + "个单词");
                 lv_word.setAdapter(adapter);
             }
 
