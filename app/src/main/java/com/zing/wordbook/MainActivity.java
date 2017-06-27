@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        lv_word.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-
-        {
+        lv_word.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Word mWord = word.get(i);
@@ -108,7 +106,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                word = wordService.searchByWord(String.valueOf(s));
+                String string = String.valueOf(s);
+                word = wordService.searchByWord(string);
+                String strings[] = SplashActivity.strings;
+                int size = word.size();
+                for (String str : strings) {
+                    if(str.toLowerCase().startsWith(string)){
+                        word.add(size, new Word(str, null));
+                    }
+                }
                 WordAdapter adapter = new WordAdapter(MainActivity.this, word);
                 tv_count_word.setText("搜索到 " + word.size() + "个单词");
                 lv_word.setAdapter(adapter);
@@ -124,6 +130,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void getAllWords() {
         word = wordService.getAllWords();
+        int size = word.size();
+        String strings[] = SplashActivity.strings;
+        for (String str : strings) {
+            word.add(size, new Word(str, null));
+        }
         tv_count_word.setText("总共 " + word.size() + "个单词");
         WordAdapter adapter = new WordAdapter(this, word);
         lv_word.setAdapter(adapter);
