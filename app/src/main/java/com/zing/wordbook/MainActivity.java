@@ -1,6 +1,9 @@
 package com.zing.wordbook;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -56,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         getAllWords();
-        btn_add_word.setOnClickListener(new View.OnClickListener()
-
-        {
+        btn_add_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AddWordActivity.class));
@@ -91,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        lv_word.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String mWord = word.get(position).getWordName();
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("复制",mWord);
+                Toast.makeText(MainActivity.this, "复制" + mWord, Toast.LENGTH_LONG).show();
+                clipboardManager.setPrimaryClip(clipData);
+            }
+        });
         et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -111,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 String strings[] = SplashActivity.strings;
                 int size = word.size();
                 for (String str : strings) {
-                    if(str.toLowerCase().startsWith(string)){
+                    if (str.toLowerCase().startsWith(string.toLowerCase())) {
                         word.add(size, new Word(str, null));
                     }
                 }
