@@ -6,14 +6,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.zing.wordbook.SplashActivity"
+    android:layout_gravity="center"
     android:weightSum="1">
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="226dp"
         tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="59dp" />
+        tools:layout_editor_absoluteY="59dp"
+        android:layout_weight="0.66" />
+
+    <TextClock
+        android:id="@+id/textClock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:layout_gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorAccent"
+      />
+
     <TextView
         android:textSize="20dp"
         android:layout_marginTop="10dp"

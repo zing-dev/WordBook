@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * Created by zhang on 2017/1/3.
- *
  */
 
 public class WordService {
@@ -53,7 +52,7 @@ public class WordService {
         wordOpenHelper.close();
     }
 
-    public int count(){
+    public int count() {
         SQLiteDatabase readableDatabase = wordOpenHelper.getReadableDatabase();
         Cursor cursor = readableDatabase.rawQuery("SELECT COUNT(*) FROM word", null);
         int count = cursor.getCount();
@@ -61,5 +60,22 @@ public class WordService {
         readableDatabase.close();
         wordOpenHelper.close();
         return count;
+    }
+
+    public List<Word> searchByWord(String str_search) {
+        List<Word> word = new ArrayList<>();
+        SQLiteDatabase readableDatabase = wordOpenHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM word WHERE word_name LIKE '%" + str_search + "%'", null);
+        int i = 0;
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("word_id"));
+            String name = cursor.getString(cursor.getColumnIndex("word_name"));
+            String desc = cursor.getString(cursor.getColumnIndex("word_desc"));
+            word.add(i++, new Word(id, name, desc));
+        }
+        cursor.close();
+        readableDatabase.close();
+        wordOpenHelper.close();
+        return word;
     }
 }

@@ -12,6 +12,11 @@
         android:textAlignment="center"
         android:textSize="@dimen/list_word_size"
         android:id="@+id/word_count"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_search"
+        android:hint="搜索单词"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

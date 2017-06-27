@@ -3,21 +3,23 @@ package com.zing.wordbook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zing.wordbook.adapter.WordAdapter;
 import com.zing.wordbook.domain.Word;
+import com.zing.wordbook.listener.EditChangedListener;
 import com.zing.wordbook.service.WordService;
 
 import java.util.List;
@@ -28,6 +30,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tv_count_word = null;
+    private EditText et_search = null;
     private Button btn_add_word = null;
     private ListView lv_word = null;
     private List<Word> word = null;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog alert = null;
 
     WordService wordService = new WordService(this);
+
+    public String str_search;
 
 
     @Override
@@ -48,13 +53,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                enterHomeActivity();
-//            }
-//        }, 2000);
-
         setContentView(R.layout.activity_main);
         init();
         getAllWords();
@@ -95,6 +93,32 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Toast.makeText(MainActivity.this, event.getCharacters(), Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                word = wordService.searchByWord(String.valueOf(s));
+                WordAdapter adapter = new WordAdapter(MainActivity.this, word);
+                lv_word.setAdapter(adapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     private void getAllWords() {
@@ -108,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         lv_word = (ListView) findViewById(R.id.lv_words);
         btn_add_word = (Button) findViewById(R.id.btn_add_word);
         tv_count_word = (TextView) findViewById(R.id.word_count);
+        et_search = (EditText) findViewById(R.id.et_search);
     }
 
     @Override
@@ -116,11 +141,4 @@ public class MainActivity extends AppCompatActivity {
         Log.i("TAG", "onResume() load layout");
         getAllWords();
     }
-
-    private void enterHomeActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 }
